@@ -64,6 +64,63 @@ Installation
    msi is downloaded.
    set root password
    TCP port 3306
-   Find the MariaDB tools i the startup Menu
+   Find the MariaDB tools in the startup Menu
+
+   Enter password: *****
+    Welcome to the MariaDB monitor.  Commands end with ; or \g.
+    Your MariaDB connection id is 3
+    Server version: 10.6.5-MariaDB mariadb.org binary distribution
+
+    Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+    MariaDB [(none)]> show databases;
+    +--------------------+
+    | Database           |
+    +--------------------+
+    | information_schema |
+    | mysql              |
+    | performance_schema |
+    | sys                |
+    +--------------------+
+    4 rows in set (0.014 sec)
+
+    MariaDB [(none)]> create database mulesoft_course;
+    Query OK, 1 row affected (0.013 sec)
+
+    MariaDB [(none)]> show databases;
+    +--------------------+
+    | Database           |
+    +--------------------+
+    | information_schema |
+    | mulesoft_course    |
+    | mysql              |
+    | performance_schema |
+    | sys                |
+    +--------------------+
+    5 rows in set (0.001 sec)
+
+    MariaDB [(none)]> use mulesoft_course
+    Database changed
+    MariaDB [mulesoft_course]> show tables;
+    Empty set (0.000 sec)   
+
+    Also can be accessed by GUI HeidiSQL
+    ![alt text](Heidi.png)
+    ![alt text](Heidi2.png)
+
+6. find the .exe in D:\Devtools\AnypointStudio\AnypointStudio.exe
+   workspace: D:\Projects_Mule\MuleMule\AnypointStudio\studio-workspace
+
+7. Create the first Mulesoft project
+File>new>Mule Project > (create project name 1.Project_zero)
+two dependencies and Mule runtime engine
+![alt text](dependencies.png)
+1.Project_zero.xml
+Editor is devided into 3 different sections: Message flow (visual representions), Global elements (connections), configuration xml (xml represnetion)
+Mule palette - connectors and processors
+Mule properties view changes according to the connectors dragged into the editor.
+
 
 
