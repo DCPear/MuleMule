@@ -77,10 +77,10 @@ Installation
 
 7. Create the first Mulesoft project
 File>new>Mule Project > (create project name 1.Project_zero)
-</br>two dependencies and Mule runtime engine
+</br>two dependencies and Mule runtime engine </br>
 ![alt text](dependencies.png)
 
-"1.Project_zero.xml@
+"1.Project_zero.xml" </br>
 Editor is devided into 3 different sections: Message flow (visual representions), Global elements (connections), configuration xml (xml represnetion)
 Mule palette - connectors and processors
 Mule properties view changes according to the connectors dragged into the editor.
