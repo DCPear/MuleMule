@@ -100,6 +100,13 @@ Mule properties view changes according to the connectors dragged into the editor
 4. set payload to "Hello from set payload" instead of hard-cording and update listner reponse to use the payload. save. application will recompile. </br>
 test - "Hello from set payload" is received.
 
+| Question     | Answer |
+| ----------- | ----------- |
+| What are the pre-requisites to install Mulesoft?      | Java     |
+| What is the minimum required configuration in a flow for a Mule application to compile?  | An event processor        |
+|Is it possible to install different runtime versions in Anypoint Studio?|yes|
+|In Anypoint Studio, how many tabs are part of the Mule Configuration file?|3|
+
     
 
 
