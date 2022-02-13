@@ -76,15 +76,33 @@ Installation
    workspace: D:\Projects_Mule\MuleMule\AnypointStudio\studio-workspace
 
 7. Create the first Mulesoft project
-File>new>Mule Project > (create project name 1.Project_zero)
+
+1. File>new>Mule Project > (create project name 1.Project_zero)
 </br>two dependencies and Mule runtime engine </br>
 ![alt text](dependencies.png)
 
 "1.Project_zero.xml" </br>
 Editor is devided into 3 different sections: Message flow (visual representions), Global elements (connections), configuration xml (xml represnetion)
 Mule palette - connectors and processors
-Mule properties view changes according to the connectors dragged into the editor.
-window>show view>console
+Mule properties view changes according to the connectors dragged into the editor. </br>window>show view>console </br>
+2. Add HTTP - Listner </br> 
+  General -Configure Litsner (all defaults) - Test the connection path /mulesoft
+  configure global element for the connector. add a connector configuration and test connection ![alt text](project-zero1.png)
+  Reponses - Set Payload (set value to "Hello Mule") </br>
+  Advanced - set allowed methods - GET </br>
+  Save. Right click on the project -> run ( deployement fails!!) </br>
+  Reason- flow must contain two parts. source and process.here process is empty.
+3. Add a logger to the message flow </br> General- Message "Start log" </br>
+   DEPLOYED
+   curl -v GET http://localhost:8081/project-zero </br>
+   Hello world!* Connection #1 to host localhost left intact
+   ![alt text](project-zero-pm.png)
+4. set payload to "Hello from set payload" instead of hard-cording and update listner reponse to use the payload. save. application will recompile. </br>
+test - "Hello from set payload" is received.
+
+    
+
+
 
 
 
