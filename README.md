@@ -36,12 +36,34 @@ How to get most out of the courses
 Installation 
 1. install java 8
  create %JAVA_HOME%\bin to point the jdk, echo %JAVA_HOME%, echo %PATH%
+  
+ >java -version
+        java version "11.0.9" 2020-10-20 LTS
+        Java(TM) SE Runtime Environment 18.9 (build 11.0.9+7-LTS)
+        Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.9+7-LTS, mixed 
 
 2. Install Maven
     %MAVEN_HOME%\bin %M2_HOME%\bin
     echo %MAVEN_HOME
     echo %M2_HOME%
 
-3. install Git
+    >mvn -v
+        Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f)
+        Maven home: C:\ProgramData\chocolatey\lib\maven\apache-maven-3.6.3\bin\..
+        Java version: 1.8.0_192, vendor: Oracle Corporation, runtime: C:\Program Files\AdoptOpenJDK\jdk8u192-b12\jre
+        Default locale: en_NZ, platform encoding: Cp1252
+        OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
+
+3. install Git choco install git -y
+   >git --version
+        git version 2.35.1.windows.2
+
+4. install postman choco install postman -y
+5. Install MariaDB (free opensource db) - for testing puposes
+   https://www.mariadbtutorial.com/getting-started/install-mariadb/
+   msi is downloaded.
+   set root password
+   TCP port 3306
+   Find the MariaDB tools i the startup Menu
 
 
