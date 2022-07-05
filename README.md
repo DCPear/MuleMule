@@ -74,6 +74,8 @@ Installation
 
 6. find the .exe in D:\Devtools\AnypointStudio\AnypointStudio.exe
    workspace: D:\Projects_Mule\MuleMule\AnypointStudio\studio-workspace
+   
+   mac versions
 
 7. Create the first Mulesoft project
 
