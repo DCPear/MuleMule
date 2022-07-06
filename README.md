@@ -99,7 +99,7 @@ Mule properties view changes according to the connectors dragged into the editor
    curl -v GET http://localhost:8081/project-zero </br>
    Hello world!* Connection #1 to host localhost left intact
    ![alt text](project-zero-pm.png)
-4. set payload to "Hello from set payload" instead of hard-cording and update listner reponse to use the payload. save. application will recompile. </br>
+4. set payload (by adding set payload component) to "Hello from set payload" instead of hard-cording and update listner reponse to use the payload. save. application will recompile. </br>
 test - "Hello from set payload" is received.
 
 | Question     | Answer |
@@ -110,8 +110,70 @@ test - "Hello from set payload" is received.
 |In Anypoint Studio, how many tabs are part of the Mule Configuration file?|3|
 
     
+### Http connector
+Explore the potential of http connector
+1. create a new Mule project 2.http_connector
+2. It is a good practice to create all global elements in an independent Mule config file - (call it global)
+#### globally config http listner
+3. Global elements -> http Listener config 
+4. drag a listner and choose the conector configuration to use http listener config
+5. path /basic/*
+6. rename the cflow to the "basics"
+7. rename the name of the log to "log START". Set up a message "log START -" + name of the flow (++ flow.name)
+Note: this flow.name works only inside the log
+8. test http://localhost:8080/basic
+9. add breakpoint at logger and use debug mode to observe
+#### using URI parameters
+10. create a new flow "uriParams" , path "/uriParams/[ID]"
+11. Change the XML to include a message message='#["log START - " ++ flow.name]12. Set the payload to attributes.uriParams."ID"
+13. Run the application in debug mode with break point in log START to get the uri parameters
+14. test http://localhost:8080/uriParams/10
+#### using Query Parameters
+15. create a new flow "queryParams", path "/queryParams
+16. add a log message
+17. set the payload 
+   ```
+      %dw 2.0
+      output application/json
+      ---
 
+      attributes.queryParams
+   ```
+18. Test http://localhost:8080/queryParams?ID=3
+    http://localhost:8080/queryParams?ID=3&msgtype=greetings&message=helloworld
+19. modify the payload to - attributes.queryParams.msgtype to get a particular parameter 
 
-
-
-
+### Send HTTP request within a Mule flow
+1. Configure HTTP request configuration 
+2. Drag Request configuration to "basic" flow
+#### Request
+3. change Request to use HTTP_Request_configuration
+4. Request GET path /queryParams
+5. define the static Query Parameters (K1,V1)(K2,V2)(K3,V3)
+6. advanced tab - define an output target variable -requestResponse
+7. change the HTTP GET basics listener to extract response body from 
+   vars.requestResponse
+8. test  http://localhost:8080/basic
+9. introduce dynamic query parameters - use se variable component to set variables before request component is called.
+rename the component to Set query params -> settings -> value
+```
+{  
+    'param1':'value1',
+	'param2':'value2',
+	'param3':'value3'
+}
+```
+10. then change the request to use the set variable -> query Parameters 
+   vars.customMap
+11. test  http://localhost:8080/basic
+12. dealing with the empty parameters - logic required
+ change reuest 
+ ```
+ output application/java
+---
+{
+	('k1': vars.customMap.param1) if (vars.customMap.param1 != null and vars.customMap.param1 != ''),
+	('k2': vars.customMap.param2) if (vars.customMap.param2 != null and vars.customMap.param2 != ''),
+	('k3': vars.customMap.param3) if (vars.customMap.param3 != null and vars.customMap.param3 != '')
+}
+ ```
