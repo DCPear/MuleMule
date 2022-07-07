@@ -113,7 +113,7 @@ test - "Hello from set payload" is received.
 ### Http connector
 Explore the potential of http connector
 1. create a new Mule project 2.http_connector
-2. It is a good practice to create all global elements in an independent Mule config file - (call it global)
+2. It is a good practice to create all global elements in an independent Mule config file - New -> Mule configuration file (call it global)
 #### globally config http listner
 3. Global elements -> http Listener config 
 4. drag a listner and choose the conector configuration to use http listener config
@@ -177,3 +177,28 @@ rename the component to Set query params -> settings -> value
 	('k3': vars.customMap.param3) if (vars.customMap.param3 != null and vars.customMap.param3 != '')
 }
  ```
+| Question     | Answer |
+| ----------- | ----------- |
+| A web client send a request to a Mule application to the endpoint /order?id=13579. Where is the id stored in the Mule event by the HTTP Listener?| Attributes |
+|In the HTTP Listener, what is the purpose of using the wildcard "/*" in the value for Path?|To listen for all incomming requests to any pth within the specified base path|
+|A web service implements an API to handle requests to https://www.polarising.com/employee/{id}. A web client makes a request to this API implementation at https://www.polarising.com/employee/4. What is the correct DataWeave expression to retrieve the value id?|#[attributes.uriParams.id]|
+
+#### EXCERCISE
+
+1.  create a mule config file exercise.xml
+2. Listener path /excercise/{ID}
+3. setpayload
+```
+output application/json
+---
+{
+	"uriParams": attributes.uriParams,
+	"queryParams": attributes.queryParams
+}
+```
+## DataWeave
+DataWeave is a functional programming language designed for transforming data. It is MuleSoft's primary language for data transformation, as well as the expression language used to configure components and connectors. However, DataWeave is also available in other contexts, like as a command-line tool.
+
+DataWeave is basically a MuleSoft expression language. It is mainly used for accessing and transforming the data received through a Mule application. Mule runtime is responsible for running the script and expressions in our Mule application, DataWeave is strongly integrated with Mule runtime.
+
+DataWeave scripts are divided into two main sections, the header, and the body. The header defines directives that apply to the body, and the body contains an expression that returns an output. The header is located above the body delimiter which consists of three dashes --- anything above the three dashes is the header, and anything below the three dashes is the body.
