@@ -202,3 +202,54 @@ DataWeave is a functional programming language designed for transforming data. I
 DataWeave is basically a MuleSoft expression language. It is mainly used for accessing and transforming the data received through a Mule application. Mule runtime is responsible for running the script and expressions in our Mule application, DataWeave is strongly integrated with Mule runtime.
 
 DataWeave scripts are divided into two main sections, the header, and the body. The header defines directives that apply to the body, and the body contains an expression that returns an output. The header is located above the body delimiter which consists of three dashes --- anything above the three dashes is the header, and anything below the three dashes is the body.
+https://docs.mulesoft.com/mule-runtime/3.9/mel-cheat-sheet
+
+"Transform Message (Core) component </br>
+1. concaternate two strings into a single string 
+```
+%dw 2.0
+
+
+output application/json
+---
+{
+	"test":("hello "++"world")
+}
+```
+2. Transform json to xml
+```
+output application/xml
+---
+{
+	"test":("hello "++"world")
+}
+```
+3. create a variable in dataweave
+```
+%dw 2.0
+
+var myVar = {
+	"test":("hello "++"world")
+}
+
+output application/json
+---
+myVar
+```
+4. use dataweave native functions
+```
+%dw 2.0
+
+var myVar = {
+"sum": sum([3,4,5,3,5]),
+"avg": avg([100,100,100]),
+"even":isEven(5),
+"uppercase":upper("deepa"),
+"leap_year":isLeapYear(2022),
+"timestamp": now()
+}
+
+output application/json
+---
+myVar
+```

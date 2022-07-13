@@ -73,9 +73,10 @@ readUrl("classpath://peopleName.json")]]></ee:set-payload>
 		<ee:transform doc:name="create metadata type use it as a payload" doc:id="02146941-12b9-463d-9e32-ba2790876c56" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
+output application/java
 ---
-payload]]></ee:set-payload>
+{
+}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>

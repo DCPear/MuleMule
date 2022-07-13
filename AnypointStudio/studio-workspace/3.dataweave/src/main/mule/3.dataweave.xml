@@ -61,4 +61,22 @@ myVar]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="dataweave_files" doc:id="b9db3918-68c8-4836-bd72-d399559a2be5" >
+		<ee:transform doc:name="read file content from the classpath" doc:id="ad1c5f7c-e2fd-4d2f-8a85-aab6b5e89053" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+readUrl("classpath://peopleName.json")]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="create metadata type use it as a payload" doc:id="02146941-12b9-463d-9e32-ba2790876c56" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 </mule>
