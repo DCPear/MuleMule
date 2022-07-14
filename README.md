@@ -433,3 +433,63 @@ output application/json
  
 customString[2 to 6]
 
+decalre and invoke a function in a Mule flow
+
+```
+%dw 2.0
+
+fun createString(obj)={
+	description: obj
+}
+
+output application/json
+---
+{
+	"root" : createString(payload)
+}
+```
+test http://localhost:8080/lambdas
+payload
+```
+{
+"field1":"MuleSoft",
+"field2":"fundamentals",
+"field3":"course"
+}
+```   
+response
+```
+{
+    "root": {
+        "description": {
+            "field1": "MuleSoft",
+            "field2": "fundamentals",
+            "field3": "course"
+        }
+    }
+}
+```   
+define metadata  > add json as example
+Chamge  output
+```
+   %dw 2.0
+
+   fun createString(obj)={
+	description: obj.field1 ++ " " ++ obj.field2++ " " ++ obj.field3
+    }
+
+    output application/json
+   ---
+  {
+	  "root" : createString(payload)
+  }
+```
+test http://localhost:8080/lambdas
+payload
+```
+{
+    "root": {
+        "description": "MuleSoft fundamentals course"
+    }
+}
+```

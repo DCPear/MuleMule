@@ -303,7 +303,7 @@ customString[2 to 6]]]></ee:set-payload>
 				<ee:set-payload ><![CDATA[%dw 2.0
 
 fun createString(obj)={
-	description: obj.field1 ++ " " ++ obj.field2++ " " ++ obj.field3
+	description: obj
 }
 
 output application/json

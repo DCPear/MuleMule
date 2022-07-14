@@ -297,22 +297,6 @@ customString[2 to 6]]]></ee:set-payload>
 		</ee:transform>
 	</flow>
 	<flow name="dataweave_lambdas_basics" doc:id="90c69f57-1a99-49fe-8c10-b172c6e5c4dd" >
-		<http:listener doc:name="HTTP POST" doc:id="c4689178-e301-4d4d-8dce-4734f5c389d4" path="/lambdas" config-ref="HTTP_Listener_config" allowedMethods="POST"/>
-		<ee:transform doc:name="declare and invoke a function" doc:id="eb029748-21af-4c57-8e0f-eed63f22969f" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-
-fun createString(obj)={
-	description: obj.field1 ++ " " ++ obj.field2++ " " ++ obj.field3
-}
-
-output application/json
----
-{
-	"root" : createString(payload)
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="6e1ab1e6-054a-4c8e-af76-9d14d01a959b" message="#[payload]"/>
+		<http:listener doc:name="Listener" doc:id="c4689178-e301-4d4d-8dce-4734f5c389d4" path="/lambdas"/>
 	</flow>
 </mule>

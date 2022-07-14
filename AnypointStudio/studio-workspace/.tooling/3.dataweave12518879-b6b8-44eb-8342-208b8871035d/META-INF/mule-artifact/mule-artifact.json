@@ -14,7 +14,6 @@
       "exportedResources": [
         "log4j2.xml",
         "peopleName.json",
-        "fieldsCourse.json",
         "application-types.xml",
         "3.dataweave.xml"
       ]

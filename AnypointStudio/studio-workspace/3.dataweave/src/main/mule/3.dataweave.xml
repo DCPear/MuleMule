@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="eb469080-86d8-4b4f-b16b-52ef89b45b8b" >
+		<http:listener-connection host="0.0.0.0" port="8080" />
+	</http:listener-config>
 	<flow name="dataweave_basics" doc:id="67e54c9a-6ace-431f-a037-5d72b051fa1d" >
 		<ee:transform doc:name="concaternate two strings into a single string" doc:id="d2b1570c-39c2-4e20-8e32-1a61b06c7163" >
 			<ee:message >
@@ -291,5 +295,24 @@ output application/json
 customString[2 to 6]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+	</flow>
+	<flow name="dataweave_lambdas_basics" doc:id="90c69f57-1a99-49fe-8c10-b172c6e5c4dd" >
+		<http:listener doc:name="HTTP POST" doc:id="c4689178-e301-4d4d-8dce-4734f5c389d4" path="/lambdas" config-ref="HTTP_Listener_config" allowedMethods="POST"/>
+		<ee:transform doc:name="declare and invoke a function" doc:id="eb029748-21af-4c57-8e0f-eed63f22969f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+fun createString(obj)={
+	description: obj.field1 ++ " " ++ obj.field2++ " " ++ obj.field3
+}
+
+output application/json
+---
+{
+	"root" : createString(payload)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="6e1ab1e6-054a-4c8e-af76-9d14d01a959b" message="#[payload]"/>
 	</flow>
 </mule>

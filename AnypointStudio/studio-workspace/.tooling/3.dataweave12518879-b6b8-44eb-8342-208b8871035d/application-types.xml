@@ -16,17 +16,6 @@ type peopleData = {|
 
 ]]></types:shape>
     </types:type>
-    <types:type name="filedsCourse" format="json">
-      <types:shape format="weave" example="fieldsCourse.json"><![CDATA[%dw 2.0
-
-type filedsCourse = {|
-  field1: String, 
-  field2: String, 
-  field3: String
-|} {"example": "{\\\"field1\\\":\\\"MuleSoft\\\",\\\"field2\\\":\\\"fundamentals\\\",\\\"field3\\\":\\\"course\\\"}"}
-
-]]></types:shape>
-    </types:type>
   </types:catalog>
   <types:enrichment select="#02146941-12b9-463d-9e32-ba2790876c56">
     <types:processor-declaration>
@@ -35,20 +24,6 @@ type filedsCourse = {|
           <types:payload type="peopleData"/>
         </types:message>
       </types:input-event>
-    </types:processor-declaration>
-  </types:enrichment>
-  <types:enrichment select="#eb029748-21af-4c57-8e0f-eed63f22969f">
-    <types:processor-declaration>
-      <types:input-event>
-        <types:message>
-          <types:payload type="filedsCourse"/>
-        </types:message>
-      </types:input-event>
-      <types:output-event>
-        <types:message>
-          <types:payload type="filedsCourse"/>
-        </types:message>
-      </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
 </types:mule>
