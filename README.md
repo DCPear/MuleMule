@@ -253,3 +253,183 @@ output application/json
 ---
 myVar
 ```
+read file content
+```
+%dw 2.0
+output application/json
+---
+readUrl("classpath://peopleName.json")
+```
+
+define metadata
+upload the file as the example
+```
+%dw 2.0
+output application/json
+---
+payload
+```
+Dataweave: How to access and transform objects and arrays
+
+### Arrays
+
+https://docs.mulesoft.com/dataweave/2.4/dw-core-functions-map
+```
+%dw 2.0
+output application/java
+---
+["jose", "pedro", "mateo"] map (value, index) -> { (index) : value}
+
+%dw 2.0
+output application/json
+---
+['a', 'b', 'c'] map ((value, index) -> (index + 1) ++ '_' ++ value)
+
+%dw 2.0
+output application/json
+---
+['joe', 'pete', 'matt'] map ( "$$" : $)
+%dw 2.0
+output application/csv
+---
+[{
+ "age": 14 ,
+ "name": "Claire"
+}, {
+ "age": 56,
+ "name": "Max"
+}, {
+ "age": 89,
+ "name": "John"
+}] map {
+   age: $.age,
+   name: $.name
+}
+```
+map elements from array to an object
+```
+var customArray = [
+	"MuleSoft",
+	"fundamentals",
+	"course"
+]
+
+output application/json
+---
+customArray map ((value, index) -> index :(index + 1) ++ '_' ++ value)
+```
+pluck object into an array
+```
+%dw 2.0
+
+var customObj = { 
+	"0": "Mulesoft",
+	"1": "fundamentals",
+	"2": "course"
+}
+output application/json
+---
+customObj pluck((value) -> value)
+```
+filter
+```
+%dw 2.0
+
+var  customArray = [1,2,3,4,5,6,7,8,9,10]
+output application/json
+---
+{
+	"collection" : customArray filter ((value,index) -> value > 5)
+}
+```
+filter an object
+```
+%dw 2.0
+
+var customObj = { 
+	"0": "Mulesoft",
+	"1": "fundamentals",
+	"2": "course",
+	"3": "easy",
+	"4": "way"
+}
+
+output application/json
+---
+{
+	"collection":customObj filterObject ((value , key) ->
+		sizeOf(value) < 7 and (key contains 3)  
+	)
+}
+```
+### DataWeave Selectors
+https://docs.mulesoft.com/dataweave/2.4/dataweave-selectors
+
+```
+%dw 2.0
+
+var customObj = { 
+	"people":{
+		"person": {
+			"name": "John"
+		},
+		"person": {
+			"name": "Jane"
+		}
+	}
+}
+output application/json
+---
+/**
+ * selectors only return the value of the first matching key, 
+ * even if the object contains multiple matching keys.
+ */
+customObj.people.person.name
+
+%dw 2.0
+
+var customObj = { 
+	"people":{
+		"person": {
+			"name": "John"
+		},
+		"person": {
+			"name": "Jane"
+		}
+	}
+}
+output application/json
+---
+/**
+ * selectors only return the value of the first matching key, 
+ * even if the object contains multiple matching keys.
+ * add a * to return multiple
+ */
+customObj.people.*person
+
+%dw 2.0
+var customString = "MuleSoft"
+
+output application/json
+---
+
+/**
+ * the string is broken into an array where
+ * each character is an index
+ */
+ 
+customString[0]
+
+%dw 2.0
+var customString = "MuleSoft"
+
+output application/json
+---
+
+/**
+ * limits the output to only the elements specified
+ * by the range on that special
+ */
+ 
+customString[2 to 6]
+

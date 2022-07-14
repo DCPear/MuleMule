@@ -60,6 +60,24 @@ output application/json
 myVar]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<ee:transform doc:name="functions" doc:id="a8d08aee-5693-4ecb-b500-31ccf06a02e7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+input payload application/json
+
+var user = {"firstName": "Deepa", "lastName" : "Perera"}
+var foo = "bar"
+fun getName(data) = (data.firstName ++ ' ' ++ data.lastName)
+var toFullname = (data) -> (data.firstName ++ ' ' ++ data.lastName)
+---
+{
+	"foo" : foo,
+	"getName" : getName(user),
+	"toFullname" : toFullname(user),
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</flow>
 	<flow name="dataweave_files" doc:id="b9db3918-68c8-4836-bd72-d399559a2be5" >
 		<ee:transform doc:name="read file content from the classpath" doc:id="ad1c5f7c-e2fd-4d2f-8a85-aab6b5e89053" >
@@ -76,6 +94,201 @@ readUrl("classpath://peopleName.json")]]></ee:set-payload>
 output application/json
 ---
 payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave_core_functions_map" doc:id="846511ba-8bae-4f1c-b15e-a4300fce2212" >
+		<ee:transform doc:name="dw-core-functions- map" doc:id="0068f895-5a2c-4abf-bd8d-79a118ed9937" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+["jose", "pedro", "mateo"] map (value, index) -> { (index) : value}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="functions_map2" doc:id="c1b54897-b637-4f61-ac57-c4643656c33b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+['a', 'b', 'c'] map ((value, index) -> (index + 1) ++ '_' ++ value)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="index can be referenced with $$, and the value with $" doc:id="1b8e0a36-ba8c-4eb2-a50b-67e89acf181f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+['joe', 'pete', 'matt'] map ( "$$" : $)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform array to CSV" doc:id="7458e710-d1dd-43cf-a139-30dbfbce71c4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+---
+[{
+ "age": 14 ,
+ "name": "Claire"
+}, {
+ "age": 56,
+ "name": "Max"
+}, {
+ "age": 89,
+ "name": "John"
+}] map {
+   age: $.age,
+   name: $.name
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave_object_array" doc:id="57eb39ed-5987-4aa8-88e1-7fb17f5e7180" >
+		<ee:transform doc:name="map elements from an array into an object" doc:id="e1540b7e-02e2-44f5-81c4-5792064e81ff" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var customArray = [
+	"MuleSoft",
+	"fundamentals",
+	"course"
+]
+
+output application/json
+---
+customArray map ((value, index) -> index :(index + 1) ++ '_' ++ value)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="pluck object into an array" doc:id="e0aafaf9-a8c2-4435-ac29-b9aef72bff26" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var customObj = { 
+	"0": "Mulesoft",
+	"1": "fundamentals",
+	"2": "course"
+}
+output application/json
+---
+customObj pluck((value) -> value)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="filter an array and return only the matching items" doc:id="de837437-1251-4c9d-aee4-0f7be244da41" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var  customArray = [1,2,3,4,5,6,7,8,9,10]
+output application/json
+---
+{
+	"collection" : customArray filter ((value,index) -> value > 5)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="filter an object and return only the matching items" doc:id="a4ff3dab-ac55-4578-85e0-31bb6dd1d560" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var customObj = { 
+	"0": "Mulesoft",
+	"1": "fundamentals",
+	"2": "course",
+	"3": "easy",
+	"4": "way"
+}
+
+output application/json
+---
+{
+	"collection":customObj filterObject ((value , key) ->
+		sizeOf(value) < 7 and (key contains 3)  
+	)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataview_selectors_over_objects" doc:id="008e1a2e-6b76-4cd5-b91d-c6fad7bbd02d" >
+		<ee:transform doc:name="single-value-selector over an object" doc:id="3a907753-7d31-4ef7-8056-390487e236a9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var customObj = { 
+	"people":{
+		"person": {
+			"name": "John"
+		},
+		"person": {
+			"name": "Jane"
+		}
+	}
+}
+output application/json
+---
+/**
+ * selectors only return the value of the first matching key, 
+ * even if the object contains multiple matching keys.
+ */
+customObj.people.person.name]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="multiple-value selector over an" doc:id="1d42baf2-111a-4d88-8e88-8d1952c2ee9f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var customObj = { 
+	"people":{
+		"person": {
+			"name": "John"
+		},
+		"person": {
+			"name": "Jane"
+		}
+	}
+}
+output application/json
+---
+/**
+ * selectors only return the value of the first matching key, 
+ * even if the object contains multiple matching keys.
+ * add a * to return multiple
+ */
+customObj.people.*person
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave_selectors-over_string" doc:id="1e1a1d54-be4b-4e48-8673-38476041bd52" >
+		<ee:transform doc:name="index selector over a string" doc:id="6069a0ec-f988-4015-bee9-590c155b20a0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var customString = "MuleSoft"
+
+output application/json
+---
+
+/**
+ * the string is broken into an array where
+ * each character is an index
+ */
+ 
+customString[0]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="range selector over a string" doc:id="0576906a-d465-4665-b7d2-3ef5a3ef783c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var customString = "MuleSoft"
+
+output application/json
+---
+
+/**
+ * limits the output to only the elements specified
+ * by the range on that special
+ */
+ 
+customString[2 to 6]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
