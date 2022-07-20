@@ -584,4 +584,161 @@ output application/json
 //? -> validates if the key "price" exists
 // and if exists, check if value > 15]
 ```
-dd
+| Question     | Answer |
+| ----------- | ----------- |
+|A flow contains an HTTP Listener as the event source. What is the DataWeave expression to log the Content-Type header using a Logger component?|#['Content-Type:'++attributes.headers.'content-type'|
+|Refer to the exhibit. What is the correct DataWeave expression for accessing the city Cleveland from the JSON payload? </br> [<img src="exhibit01.png" width="250"/>](exhibit01.png) | #[payload[1].city]|
+|Refer to the exhibit. An event payload contains an unordered array of flight objects, where every object has a price key and a toAirport key. What is valid DataWeave code to return flights with price under 500, grouped by toAirport in ascending order, with the lowest price first? </br> [<img src="exhibit02.jpeg" width="250"/>](exhibit02.jpeg)|Payload filter $.price<500 orderBy $.price groupBy $.toAirport|
+|Refer to the exhibit. What is the valid DataWeave code to transform the input JSON payload to the output XML payload? </br> [<img src="exhibit03.jpeg" width="250"/>](exhibit03.jpeg)|[<img src="exhibit04.png" width="250"/>](exhibit04.png)|
+|Refer to the exhibit. What is the valid DataWeave code to get the output JSON payload? </br> [<img src="exhibit05.jpeg" width="250"/>](exhibit05.jpeg) | customObj.people.&person[0]|customObj.people.&person[0]|
+
+#### EXCERCISE
+Use a scope variable called "sum_prices_cost" to store the sum of all the prices defined in an array of integers. This array will contain 5 different amounts: [17, 10, 20, 5, 10]. Then, output an JSON object with a list of product descriptions whose result of the calculation "quantity*unit_price" is higher than "sum_prices_cost".
+
+```
+%dw 2.0
+
+var itemsList = {
+	"items":[
+		"item":{
+			"description": "Product1",
+			"quantity": 1,
+			"unit_price": 20,
+			"toDiscount": "No"
+		},
+		"item":{
+			"description": "Product2",
+			"quantity": 2,
+			"unit_price": 30,
+			"toDiscount": "Yes"
+		},
+		"item":{
+			"description": "Product3",
+			"quantity": 3,
+			"unit_price": 40,
+			"toDiscount": "Yes"
+		}
+	]
+}
+
+output application/json
+---
+using (sum_prices_cost = [17, 10, 20, 5, 10] reduce ((element, accumulated) -> accumulated + element))
+{
+	"products": itemsList.items.*item default [] map ((currItem) -> 
+		using (item_total_price = currItem.quantity * currItem.unit_price)
+		if (item_total_price < sum_prices_cost) (currItem.description) else ""
+	)}
+```
+Scoped Variables:
+
+To declare a variable in the DataWeave body, the following syntax is supported: using (<variable-name> = <expression>) and it must be written before defining the contents of the literal that it exists in. To reference an already initialized variable, you can just call it by the name you defined for it as with any other variable, or you can also write it in the form $<variable-name>.
+
+https://docs.mulesoft.com/mule-runtime/3.9/dataweave-language-introduction#variables
+
+If else conditional expression:
+
+An if statement evaluates a conditional expression and returns the value under the if only if the conditional expression is true. Otherwise, it will return the expression under else.
+
+https://docs.mulesoft.com/mule-runtime/4.3/dataweave-flow-control#control_flow_if_else
+
+```
+%dw 2.0
+
+var tax = 0.23
+var discount = 0.10
+
+var itemsList = {
+	"items":[
+		"item":{
+			"description": "Product1",
+			"quantity": 1,
+			"unit_price": 20,
+			"toDiscount": "No"
+		},
+		"item":{
+			"description": "Product2",
+			"quantity": 2,
+			"unit_price": 30,
+			"toDiscount": "Yes"
+		},
+		"item":{
+			"description": "Product3",
+			"quantity": 3,
+			"unit_price": 40,
+			"toDiscount": "Yes"
+		}
+	]
+}
+
+
+output application/json
+---
+"invoice": {
+	"items": 
+		itemsList.items.*item map ((item) -> 
+		using( item_final_price = item.unit_price * item.quantity)
+		{
+			"item": item.description,
+			"quantity": item.quantity,
+			"unit_price": item.unit_price,
+			"discount": if (item.toDiscount contains "Yes") (discount) else (0.00),
+			("cost": if (item.toDiscount contains "Yes") 
+				(item_final_price * (1- discount))
+			else item_final_price)
+		}
+				
+	),
+	"total": 
+		using (sum_items_cost = itemsList.items.item.*unit_price default [] reduce ( (element, accumulated = 0) -> accumulated + element) )
+		{
+			"total_cost_before_taxation": sum_items_cost,
+			"taxation": tax*100 ++ "%",
+			"total_cost_after_taxation": sum_items_cost * (1 + tax) as Number
+		}
+}
+```
+## Property Files
+
+1. /src/main/resources/conf1.yaml
+```
+http:
+  host: "localhost"
+  port: "8080"
+  path: "/test1"
+  
+message: " yaml file used"
+```
+2. src/main/resources/conf2.properties
+```
+http.host=localhost
+http.port=8081
+http.path=/test2
+
+message=properties file 
+```
+3. add 2 global configuration elements </br> [<img src="GlobalConfigElements.png" width="250"/>](GlobalConfigElements.png)
+
+4. Http Listener config (Configuration) 
+```
+   Host:${http.host}
+   Port:${http.port}
+```
+
+5. Configuration properties (Configuration)
+ ```
+      File:conf1.yaml
+ ```
+6. Create a Mule flow. </br>
+
+[<img src="4.HttpGet.png" width="250"/>](4.HttpGet.png) </br>
+[<img src="4.Logger.png" width="250"/>](4.Logger.png) </br>
+[<img src="4.setpayload.png" width="250"/>](4.setpayload.png)
+ 
+ 
+ 6. run as Mule application and test
+ ```
+ http://localhost:8080/test1
+
+ payload : yaml file used                                  
+ ```
