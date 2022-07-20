@@ -470,7 +470,7 @@ response
 }
 ```   
 define metadata  > add json as example
-Chamge  output
+Change  output
 ```
    %dw 2.0
 
@@ -494,7 +494,7 @@ payload
 }
 ```
 
-merge 2 arrays
+maps and merges fields from items in seperate arrays
 
 
    %dw 2.0
@@ -583,4 +583,5 @@ output application/json
 
 //? -> validates if the key "price" exists
 // and if exists, check if value > 15]
-
+```
+dd
