@@ -436,13 +436,13 @@ customString[2 to 6]
 decalre and invoke a function in a Mule flow
 
 ```
-%dw 2.0
+ %dw 2.0
 
-fun createString(obj)={
-	description: obj
-}
+  fun createString(obj)={
+	 description: obj
+ }
 
-output application/json
+ output application/json
 ---
 {
 	"root" : createString(payload)
@@ -493,3 +493,94 @@ payload
     }
 }
 ```
+
+merge 2 arrays
+
+
+   %dw 2.0
+
+   var books =[
+	   {
+		bookid: 100,
+		title : "Mule Mule",
+		price : "20.00"
+	},
+	{
+		bookid: 101,
+		title : "Mule fundamentals",
+		price : "28.00"
+	},
+	{
+		bookid: 102,
+		title : "Mule 101",
+		price : "36.00"
+	}
+	
+]
+var authors =[
+	{
+		bookid: 100,
+		author:"know itall"
+	},
+	{
+		bookid: 101,
+		author:"la la land"
+	},
+	{
+		bookid: 102,
+		author:"Mule nutter"
+	}
+]
+output application/json
+---
+{
+	"booksResult": books map ((item, index) -> 
+		//create a dynamic variable at the map level
+		do {
+  var id = item.bookid
+  ---
+  {
+    "id": id,
+    "topic": item.title,
+    "cost": item.price,
+    // lets attach the author to the book object
+    (authors filter ($.*bookid contains id) map (item) -> {
+      // $.*bookid refers to author array
+      "author": item.author
+    })
+  }
+}
+	)
+	}
+
+
+returns only the values of matching keys within an object
+
+   %dw 2.0
+
+var booksList = [
+	book: {
+		bookId : 101,
+		title: "mulesoft course",
+		"price": "20.00"
+	},
+	book: {
+		bookId : 202,
+		title: "mulesoft fundamentals",
+		"price": "10.00"
+	},
+	book: {
+		bookId : 303,
+		title: "mulesoft essentials",
+		"price": "15.00"
+	}
+]
+output application/json
+---
+
+//lets get all the prices > 15.00
+"prices":booksList.book.price[?($ >15)]
+
+//? -> validates if the key "price" exists
+// and if exists, check if value > 15]
+

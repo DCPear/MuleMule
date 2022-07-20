@@ -314,5 +314,124 @@ output application/json
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="6e1ab1e6-054a-4c8e-af76-9d14d01a959b" message="#[payload]"/>
+		<ee:transform doc:name="use named parameters in lambda" doc:id="a1c66142-64ff-42b5-b549-edf49059d926" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var customArray =[1,2,3,4,5,6]
+
+output application/json
+---
+
+"collection": customArray map ((value) -> (value * 100))
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="3b395f74-9b85-4993-90f1-c929e22cf7c1" message="#[payload]"/>
+		<ee:transform doc:name="use lambda default argument values" doc:id="1be579b7-d446-40dc-be88-1841bf5b4c21" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var customeArray = ["Mulesoft", "course","fundamentals"]
+
+output application/json
+---
+
+// $$: index, $: item
+"collection" : customeArray map ( "$$" : $)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave_lambdas_intermediate" doc:id="b49134f1-4322-4720-a763-65c07fef90b0" >
+		<ee:transform doc:name="maps and merges fields from items in seperate arrays" doc:id="8c0ad7a0-dbde-4f28-92b5-a1149661b7f7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var books = [
+	{
+		bookId : 101,
+		title: "mulesoft course",
+		"price": "20.00"
+	},
+	{
+		bookId : 202,
+		title: "mulesoft fundamentals",
+		"price": "10.00"
+	},
+	{
+		bookId : 303,
+		title: "mulesoft essentials",
+		"price": "15.00"
+	}
+]
+var authors = [
+	{
+		bookId: 101,
+		author: "nelson dias"
+	},
+	{
+		bookId: 202,
+		author: "cristiano ronaldo"
+	},
+	{
+		bookId: 303,
+		author: "michael jordan"
+	}
+]
+output application/json
+---
+{
+	"booksResult": books map ((item, index) -> 
+		//create a dynamic variable at the map level
+		do {
+  var id = item.bookId
+  ---
+  {
+    "id": id,
+    "topic": item.title,
+    "cost": item.price,
+    // lets attach the author to the book object
+    (authors filter ($.*bookId contains id) map (item) -> {
+      // $.*bookId refers to author array
+      "author": item.author
+    })
+  }
+}
+	)
+	}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="returns only the values of matching keys within an object" doc:id="3796f5a1-3650-48e8-a866-3ffd5c5f5b6b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+
+var booksList = [
+	book: {
+		bookId : 101,
+		title: "mulesoft course",
+		"price": "20.00"
+	},
+	book: {
+		bookId : 202,
+		title: "mulesoft fundamentals",
+		"price": "10.00"
+	},
+	book: {
+		bookId : 303,
+		title: "mulesoft essentials",
+		"price": "15.00"
+	}
+]
+output application/json
+---
+
+//lets get all the prices > 15.00
+"prices":booksList.book.price[?($ >15)]
+
+//? -> validates if the key "price" exists
+// and if exists, check if value > 15]
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</flow>
 </mule>
