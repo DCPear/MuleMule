@@ -698,7 +698,7 @@ output application/json
 		}
 }
 ```
-## Property Files
+## Property Files - create 2 types of configuration files
 
 1. /src/main/resources/conf1.yaml
 ```
@@ -725,20 +725,31 @@ message=properties file
    Port:${http.port}
 ```
 
-5. Configuration properties (Configuration)
- ```
-      File:conf1.yaml
- ```
-6. Create a Mule flow. </br>
+5. Create a Mule flow. </br>
 
 [<img src="4.HttpGet.png" width="250"/>](4.HttpGet.png) </br>
 [<img src="4.Logger.png" width="250"/>](4.Logger.png) </br>
 [<img src="4.setpayload.png" width="250"/>](4.setpayload.png)
  
+ 6. use conf1.yaml in Configuration properties (Configuration)
+ ```
+      File:conf1.yaml
+ ```
  
- 6. run as Mule application and test
+ 7. run as Mule application and test
  ```
  http://localhost:8080/test1
 
  payload : yaml file used                                  
+ ```
+
+  8. use conf2.properties in Configuration properties (Configuration)
+ ```
+      File:conf2.properties
+ ```
+9. run as Mule application and test
+ ```
+ http://localhost:8080/test2
+
+ payload : properties file                               
  ```

@@ -16,7 +16,12 @@
         "log4j2.xml",
         "global.xml",
         "4.properties_file.xml",
+        "config-prd.yaml",
+        "common.yaml",
         "conf1.yaml",
+        "config-uat.yaml",
+        "config-dev.yaml",
+        "config-tst.yaml",
         "conf2.properties"
       ]
     }

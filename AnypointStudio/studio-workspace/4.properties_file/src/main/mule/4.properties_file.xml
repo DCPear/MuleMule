@@ -7,10 +7,19 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="7bb4d76a-2ef8-43bd-b498-d68baf05aef0" >
 		<http:listener-connection host="${http.host}" port="${http.port}" />
 	</http:listener-config>
-	<configuration-properties doc:name="Configuration properties" doc:id="d2bb47ed-3424-4b2f-a3f4-3cb16b320c2f" file="conf1.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="d2bb47ed-3424-4b2f-a3f4-3cb16b320c2f" file="common.yaml" doc:description="common configuration properties"/>
+	<configuration-properties doc:name="Configuration properties" doc:id="c44148d1-8444-4c18-b1a2-774093f2631d" doc:description="dynamic configuration prperty file" file="config-${environment}.yaml" />
+	<global-property doc:name="Global Property" doc:id="769e2ce4-5b9e-4018-a95c-4702f99ad73d" name="environment" value="dev" />
+	<!--  
 	<flow name="properties_files_basics" doc:id="7e79d8d7-e0ae-4d20-b4a9-187139a8880e" >
 		<http:listener doc:name="HTTP GET" doc:id="bf71eb0f-8ec1-4709-9355-efed96a8fb03" config-ref="HTTP_Listener_config1" path="${http.path}"/>
 		<logger level="INFO" doc:name="Logger" doc:id="6db76802-e538-4b65-b454-e8658991e935" message="${message}"/>
 		<set-payload value="${message}" doc:name="Set Payload" doc:id="209bcd49-e1b4-449d-8053-f7bd7ac90073" />
+	</flow>
+	-->
+	<flow name="4.properties_dynamics" doc:id="1ad7a48d-fa6e-4e40-a89c-9323b03ebebd" >
+		<http:listener doc:name="HTTP GET" doc:id="f385065d-67ae-48d7-9ea5-2ab47035ba90" config-ref="HTTP_Listener_config1" path="${http.path}"/>
+		<logger level="INFO" doc:name="Logger" doc:id="2c321888-45b1-4cf9-96f7-8bb2258a41c4" message='#[%dw 2.0&#10;&#10;output application/json&#10;---&#10;&#10;{&#10;	"message": Mule::p("myMessage")&#10;}]'/>
+		<set-payload value='#[%dw 2.0&#10;&#10;output application/json&#10;---&#10;{&#10;	"message": Mule::p("myMessage")&#10;}]' doc:name="Set Payload" doc:id="f645ed1f-4656-44b5-b95e-df028397a05a" />
 	</flow>
 </mule>
