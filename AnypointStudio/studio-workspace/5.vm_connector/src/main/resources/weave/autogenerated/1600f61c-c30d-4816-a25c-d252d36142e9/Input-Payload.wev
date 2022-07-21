@@ -1,0 +1,5 @@
+%dw 2.0
+
+type auto_1600f61c_c30d_4816_a25c_d252d36142e9_Input_Payload = Any {"typeAlias": "Serializable",
+"typeId": "java.io.Serializable"}
+
