@@ -1,7 +1,8 @@
 {
   "configs": [
     "4.properties_file.xml",
-    "global.xml"
+    "global.xml",
+    "excercise.xml"
   ],
   "secureProperties": [],
   "redeploymentEnabled": true,
@@ -17,6 +18,7 @@
         "global.xml",
         "4.properties_file.xml",
         "config-prd.yaml",
+        "excercise.xml",
         "common.yaml",
         "conf1.yaml",
         "config-uat.yaml",

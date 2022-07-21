@@ -753,3 +753,75 @@ message=properties file
 
  payload : properties file                               
  ```
+
+ Create configuration files for different environments </br>
+
+Create 4 configuration property files
+ DEV, TST, UAT, PROD + common yaml file generic properties in src/main/resources
+
+ 1. Create common.yaml
+ ```
+ http:
+  host: "localhost"
+  port: "8080"
+  path: "/env"
+ ```
+ 2. Create config-<env> yaml file for each environment. dev, prd, tst, uat
+ ```
+ myMessage:: " PROD yaml file used"
+ ```
+ 3. create a mule flow
+
+ logger and payload
+ ```
+ %dw 2.0
+
+output application/json
+---
+
+{
+	"message": Mule::p("myMessage")
+}
+```
+configuration properties -> File:common.yaml
+configuration properties -> File: config-${environment}.yaml
+Global Property - Name: environment value:dev (default)
+
+4. run Mule and test
+```
+http://localhost:8080/env
+payload
+
+```
+
+4. run Mule and test
+```
+http://localhost:8080/env
+payload
+" DEV yaml file used"
+```
+5. run Mule and test
+```
+change run configurations to have argument -Denvironment=tst (this override the global perty environment)
+http://localhost:8080/env
+payload
+" TEST yaml file used"
+```
+note: previous flow has to be commented out
+
+Once you have configured your properties file and added it to your project, you can reference its attributes by using a syntax like this: ${propertyContainer.propertyName}
+
+| Question     | Answer |
+| ----------- | ----------- |
+|In how many different ways can we create a properties file for each development environment in your application?|2|
+|What is the dataweave function that returns a string that identifies the value of the .yaml file property "word":| Mule::p("word") </br> <sub<sup>True! The p function returns a string that identifies the value of one of these input properties: Mule property placeholders, System properties, or Environment variables. The p function returns a null value if the property is not set or if the function does not find the property. </sup></sub>|
+|What is the recommended approach to configure your Mule application to automatically load property files based on the development environment?|[<img src="Mule_config.png" width="250"/>](Mule_config.png)|
+|Refer to the exhibit .yaml file. If it is configured a placeholder in the Mule application for each property in the file, will the Mule application be successfully deployed? </br>``` port:8080 ```| no </br> True! The .yaml file only supports strings|
+
+ ## VM Connector
+ ## Database Connector
+ ## File Connector
+ ## Error Handling
+ ## Create an API Specification with RAML
+ ## Implement the logic for the API Interface
+ ## Deploy and API in a Mule runtime engine instance
